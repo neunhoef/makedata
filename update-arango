@@ -1,0 +1,12 @@
+#!/bin/bash
+VER=3.5.2-1
+DEB={DEB:="arangodb3e_${VER}_amd64.deb"}
+
+ferr() {
+    echo "$*"
+    exit 1
+}
+
+apt-get remove -y --purge arangodb3e || ferr "failed to uninstall"
+dpkg -i arangodb3e_3.5.2-1_amd64.deb || ferr "failed to install"
+systemctl stop angodb3.service || ferr "failed to stop"
