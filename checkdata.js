@@ -63,14 +63,8 @@ if (db._query(`FOR x IN cunique FILTER x.a == "id32236" RETURN x`).toArray().len
 if (db._query(`FOR x IN cmulti FILTER x.a == "id32847" RETURN x`).toArray().length !== 1) { throw "Honeymelon"; }
 
 // Check view:
-
 let view1 = db._view("view1");
-try {
-  print(view1.properties())
-  if (view1.properties().links.cview1 === undefined) {throw "Hass"; }
-} catch (e) {
-  print(e)
-}
+if (view1.properties().links.cview1 === undefined) {throw "Hass"; }
 
 // Check graph:
 
