@@ -7,4 +7,5 @@ export IP=${IP:-localhost}
 arangosync configure sync \
   --master.endpoint=https://${IP}:8837 \
   --auth.keyfile=${CERTDIR}/client-auth-ca.keyfile \
+  --source.cacert=${CERTDIR}/tls-ca.crt \
   --master.cacert=${CERTDIR}/tls-ca.crt
