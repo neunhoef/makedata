@@ -14,4 +14,5 @@ exec arangodb --starter.data-dir="$data" \
               --sync.server.keyfile=${CERTDIR}/cluster2-tls.keyfile \
               --sync.server.client-cafile=${CERTDIR}/client-auth-ca.crt \
               --sync.server.client-cafile=${CERTDIR}/cluster2-syncmaster.jwtsecret \
-              --starter.address="${IP}"
+              --starter.address="${IP}" \
+              --starter.port=9528
