@@ -21,7 +21,7 @@ for f in "$jwt_secret" "$server_keyfile" "$server_ca" "$master_jwt_secret"; do
 done
 
 exec arangodb --starter.data-dir="$data" \
-              --starter.port=8844 \
+              --starter.port=9933 \
               --starter.sync \
               --starter.local \
               --auth.jwt-secret="$jwt_secret" \
