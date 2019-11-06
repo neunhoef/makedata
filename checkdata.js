@@ -53,6 +53,15 @@ if (cfull.count() != 6253) { throw "Renault"; }
 if (cunique.count() != 5362) { throw "Opel"; }
 if (cmulti.count() != 12346) { throw "Fiat"; }
 
+// Check a few queries:
+if (db._query(`FOR x IN c FILTER x.a == "id1001" RETURN x`).toArray().length !== 1) { throw "Red Currant"; }
+if (db._query(`FOR x IN chash FILTER x.a == "id10452" RETURN x`).toArray().length !== 1) { throw "Blueberry"; }
+if (db._query(`FOR x IN cskip FILTER x.a == "id13948" RETURN x`).toArray().length !== 1) { throw "Grape"; }
+if (db._query(`FOR x IN cempty RETURN x`).toArray().length !== 0) { throw "Grapefruit"; }
+if (db._query(`FOR x IN cgeo FILTER x.a == "id20473" RETURN x`).toArray().length !== 1) { throw "Bean"; }
+if (db._query(`FOR x IN cunique FILTER x.a == "id32236" RETURN x`).toArray().length !== 1) { throw "Watermelon"; }
+if (db._query(`FOR x IN cmulti FILTER x.a == "id32847" RETURN x`).toArray().length !== 1) { throw "Honeymelon"; }
+
 // Check view:
 let view1 = db._view("view1");
 if (view1.properties().links.cview1 === undefined) {throw "Hass"; }
