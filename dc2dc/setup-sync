@@ -5,8 +5,8 @@ export CERTDIR=${CERTDIR:-"./certs"}
 export IP=${IP:-localhost}
 
 arangosync configure sync \
-  --master.endpoint=https://${IP}:8858 \
+  --master.endpoint=https://${IP}:8837 \
   --master.keyfile=${CERTDIR}/client-auth-ca.keyfile \
-  --source.endpoint=https://${IP}:9948 \
+  --source.endpoint=https://${IP}:9937 \
   --source.cacert=${CERTDIR}/tls-ca.crt \
   --auth.keyfile=${CERTDIR}/client-auth-ca.keyfile
