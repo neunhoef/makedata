@@ -53,11 +53,30 @@ if (cfull.count() != 6253) { throw "Renault"; }
 if (cunique.count() != 5362) { throw "Opel"; }
 if (cmulti.count() != 12346) { throw "Fiat"; }
 
+// Check view:
 
 let view1 = db._view("view1");
 try {
-  print(view1.properties(true))
-  if (view1.properties(true).links.cview1 === undefined) {throw "Hass"; }
+  print(view1.properties())
+  if (view1.properties().links.cview1 === undefined) {throw "Hass"; }
 } catch (e) {
   print(e)
+}
+
+// Check graph:
+
+if (db.patents_naive.count() !== 761) { throw "Orange"; }
+if (db.citations_naive.count() !== 629) { throw "Papaya"; }
+if (db._query(`FOR v, e, p IN 1..10 OUTBOUND "patents_naive/US:3858245" 
+                 GRAPH "G_naive"
+                 RETURN v`).toArray().length !== 4) { throw "Physalis"; }
+let v = db._connection.GET("/_api/version");
+if (v.license !== "enterprise") {
+  print("Not an enterprise version, not checking smart graph.");
+} else {
+  if (db.patents_smart.count() !== 761) { throw "Cherry"; }
+  if (db.citations_smart.count() !== 629) { throw "Liji"; }
+  if (db._query(`FOR v, e, p IN 1..10 OUTBOUND "patents_smart/US:3858245" 
+                   GRAPH "G_smart"
+                   RETURN v`).toArray().length !== 4) { throw "Black Currant"; }
 }
