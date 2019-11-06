@@ -132,5 +132,30 @@ cview1.insert({"animal": "cat", "name": "tom"}
              ,{"animal": "dog", "name": "harry"}
              )
 
+// Now create a graph:
+
+let writeGraphData = function(V, E) {
+
+}
+
+let g = require("@arangodb/general-graph");
+let G = g._create("G_naive",[g._relation("citations_naive",
+                               ["patents_naive"],["patents_naive"])],
+              [], {numberOfShards:3});
+writeGraphData(db._collection("patents_naive"),
+               db._collection("citations_naive"));
 
 
+// And now a smart graph (if enterprise):
+
+let v = db._connection.GET("/_api/version");
+if (v.license !== "enterprise") {
+  print("Not an enterprise version, not creating smart graph.");
+} else {
+  let gsm = require("@arangodb/smart-graph");
+  let Gsm = gsm._create("G_smart",[gsm._relation("citations_smart",
+                                     ["patents_smart"],["patents_smart"])],
+                    [], {numberOfShards:3, smartGraphAttribute:"COUNTRY"});
+  writeGraphData(db._collection("patents_smart"),
+                 db._collection("citations_smart"));
+}

@@ -28,6 +28,19 @@ try { db._drop("cempty"); } catch (e) {}
 try { db._dropView("view1"); } catch (e) { print(e); }
 try { db._drop("cview1"); } catch (e) { print(e); }
 
+// Drop graph:
+
+let g = require("@arangodb/general-graph");
+try { g._drop("G_naive", true); } catch(e) { }
+
+let v = db._connection.GET("/_api/version");
+if (v.license !== "enterprise") {
+  print("Not an enterprise version, not dropping smart graph.");
+} else {
+  let gsm = require("@arangodb/smart-graph");
+  try { gsm._drop("G_smart", true); } catch(e) { }
+}
+
 // Drop database:
 
 db._useDatabase("_system");
