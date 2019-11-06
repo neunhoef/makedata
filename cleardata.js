@@ -16,14 +16,13 @@ if (database != "_system") {
 
 // Drop collections:
 
-try {
-  let c = db._drop("c");
-  let chash = db._drop("chash");
-  let cskip = db._drop("cskip");
-  let cgeo = db._drop("cgeo");
-  let cmulti = db._drop("cmulti");
-} catch(e) {
-}
+try { db._drop("c"); } catch (e) {}
+try { db._drop("chash"); } catch (e) {}
+try { db._drop("cskip"); } catch (e) {}
+try { db._drop("cfull"); } catch (e) {}
+try { db._drop("cgeo"); } catch (e) {}
+try { db._drop("cunique"); } catch (e) {}
+try { db._drop("cmulti"); } catch (e) {}
 
 // Drop database:
 
