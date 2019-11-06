@@ -1,6 +1,6 @@
 #!/bin/bash
 
-data="$HOME/release-test-data/cluster-node3"
+data="$HOME/release-test-data/cluster-node4"
 mkdir -p "$data"
 exec arangodb --starter.data-dir="$data" \
               --starter.join=localhost:8833 \
