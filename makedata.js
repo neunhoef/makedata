@@ -4,8 +4,12 @@
 // where DATABASENAME is optional and defaults to "_system". The database
 // in question is created (if it is not "_system").
 
+let fs = require("fs");
 let database = "_system";
 
+let PWDRE = /.*at (.*)makedata.js.*/
+let stack = new Error().stack;
+let PWD=fs.makeAbsolute(PWDRE.exec(stack)[1]);
 if (0 < ARGUMENTS.length) {
   database = ARGUMENTS[0];
 }
@@ -135,7 +139,6 @@ cview1.insert({"animal": "cat", "name": "tom"}
 // Now create a graph:
 
 let writeGraphData = function(V, E, vertnames, edgenames) {
-  let fs = require("fs");
   let vfile = fs.readFileSync(vertnames);
   let efile = fs.readFileSync(edgenames);
   let v = JSON.parse(vfile);
@@ -150,7 +153,7 @@ let G = g._create("G_naive",[g._relation("citations_naive",
               [], {numberOfShards:3});
 writeGraphData(db._collection("patents_naive"),
                db._collection("citations_naive"),
-               "./vertices.json", "./edges_naive.json");
+               `${PWD}/vertices.json`, `${PWD}/edges_naive.json`);
 
 
 // And now a smart graph (if enterprise):
@@ -165,5 +168,5 @@ if (v.license !== "enterprise") {
                     [], {numberOfShards:3, smartGraphAttribute:"COUNTRY"});
   writeGraphData(db._collection("patents_smart"),
                  db._collection("citations_smart"),
-               "./vertices.json", "./edges.json");
+               `${PWD}/vertices.json`, `${PWD}/edges.json`);
 }
