@@ -1,0 +1,17 @@
+#!/bin/bash
+
+export CERTDIR=${CERTDIR:-"./certs"}
+export IP=${IP:-localhost}
+
+data="$HOME/release-test-data/dc2dc-cluster1"
+mkdir -p "$data"
+
+exec arangodb --starter.data-dir="$data" \
+              --starter.port=8833 \
+              --starter.sync \
+              --starter.local \
+              --auth.jwt-secret=${CERTDIR}/cluster1-arangodb.jwtsecret \
+              --sync.server.keyfile=${CERTDIR}/cluster1-tls.keyfile \
+              --sync.server.client-cafile=${CERTDIR}/client-auth-ca.crt \
+              --sync.server.client-cafile=${CERTDIR}/cluster1-syncmaster.jwtsecret \
+              --starter.address="${IP}"
