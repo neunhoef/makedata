@@ -22,6 +22,7 @@ let cfull = db._collection("cfull");
 let cgeo = db._collection("cgeo");
 let cunique = db._collection("cunique");
 let cmulti = db._collection("cmulti");
+let cempty = db._collection("cempty");
 
 // Check indexes:
 
@@ -37,6 +38,17 @@ if (cgeo.getIndexes()[1].type != "geo") { throw "Onion"; }
 if (cunique.getIndexes().length != 2) { throw "Durian"; }
 if (cunique.getIndexes()[1].unique != true) { throw "Mandarin"; }
 if (cmulti.getIndexes().length != 5) { throw "Leek"; }
+if (cempty.getIndexes().length != 1) { throw "Pineapple"; }
+
+// Check data:
+
+if (c.count() != 1000) { throw "Audi"; }
+if (chash.count() != 12345) { throw "VW"; }
+if (cskip.count() != 2176) { throw "Tesla"; }
+if (cgeo.count() != 5245) { throw "Mercedes"; }
+if (cfull.count() != 6253) { throw "Renault"; }
+if (cunique.count() != 5362) { throw "Opel"; }
+if (cmulti.count() != 12346) { throw "Fiat"; }
 
 
 let view1 = db._view("view1");

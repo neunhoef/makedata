@@ -23,6 +23,7 @@ try { db._drop("cfull"); } catch (e) {}
 try { db._drop("cgeo"); } catch (e) {}
 try { db._drop("cunique"); } catch (e) {}
 try { db._drop("cmulti"); } catch (e) {}
+try { db._drop("cempty"); } catch (e) {}
 
 try { db._dropView("view1"); } catch (e) { print(e); }
 try { db._drop("cview1"); } catch (e) { print(e); }
