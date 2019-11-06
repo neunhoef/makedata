@@ -5,4 +5,5 @@ mkdir -p "$data"
 exec arangodb --starter.data-dir="$data" \
               --starter.join localhost \
               --starter.port 8833 \
+              --starter.unique-port-offsets 69 \
               --starter.mode=activefailover
