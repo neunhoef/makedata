@@ -54,14 +54,8 @@ if (cunique.count() != 5362) { throw "Opel"; }
 if (cmulti.count() != 12346) { throw "Fiat"; }
 
 // Check view:
-
 let view1 = db._view("view1");
-try {
-  print(view1.properties())
-  if (view1.properties().links.cview1 === undefined) {throw "Hass"; }
-} catch (e) {
-  print(e)
-}
+if (view1.properties().links.cview1 === undefined) {throw "Hass"; }
 
 // Check graph:
 
