@@ -4,5 +4,4 @@ data="$HOME/release-test-data/active-failover-node3"
 mkdir -p "$data"
 exec arangodb --starter.data-dir="$data" \
               --starter.join=localhost:8833 \
-              --starter.unique-port-offsets=true \
               --starter.mode=activefailover

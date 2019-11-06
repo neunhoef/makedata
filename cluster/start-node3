@@ -4,6 +4,5 @@ data="$HOME/release-test-data/cluster-node3"
 mkdir -p "$data"
 exec arangodb --starter.data-dir="$data" \
               --starter.join=localhost:8833 \
-              --starter.unique-port-offsets=true \
               --server.storage-engine=rocksdb \
               --auth.jwt-secret=./jwt-secret
