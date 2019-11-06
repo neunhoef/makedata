@@ -7,11 +7,11 @@ export IP=${IP:-localhost}
 echo "################################### cluster 1"
 arangosync get status \
   --master.endpoint=https://${IP}:8837 \
-  --master.keyfile=${CERTDIR}/client-auth-ca.keyfile \
+  --auth.keyfile=${CERTDIR}/client-auth-ca.keyfile \
   --verbose
 
 echo "################################### cluster 2"
 arangosync get status \
   --master.endpoint=https://${IP}:9937 \
-  --master.keyfile=${CERTDIR}/client-auth-ca.keyfile \
+  --auth.keyfile=${CERTDIR}/client-auth-ca.keyfile \
   --verbose
