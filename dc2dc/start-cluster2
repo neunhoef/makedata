@@ -2,17 +2,29 @@
 
 export CERTDIR=${CERTDIR:-"./certs"}
 export IP=${IP:-localhost}
-
 data="$HOME/release-test-data/dc2dc-cluster2"
-mkdir -p "$data"
+
+ferr() {
+    echo "$*"
+    exit 1
+}
+
+mkdir -p "$data" || ferr "failed to create data dir"
+jwt_secret=${CERTDIR}/cluster2-arangodb.jwtsecret
+server_keyfile=${CERTDIR}/cluster2-tls.keyfile
+server_ca=${CERTDIR}/client-auth-ca.crt
+master_jwt_secret=${CERTDIR}/cluster2-syncmaster.jwtsecret
+
+for f in "$jwtsecret" "$server_keyfile" "$server_ca" "$master_jwt_secret"; do
+    [[ -f "$f" ]] || ferr "file not present $f"
+done
 
 exec arangodb --starter.data-dir="$data" \
               --starter.port=8833 \
               --starter.sync \
               --starter.local \
-              --auth.jwt-secret=${CERTDIR}/cluster2-arangodb.jwtsecret \
-              --sync.server.keyfile=${CERTDIR}/cluster2-tls.keyfile \
-              --sync.server.client-cafile=${CERTDIR}/client-auth-ca.crt \
-              --sync.server.client-cafile=${CERTDIR}/cluster2-syncmaster.jwtsecret \
-              --starter.address="${IP}" \
-              --starter.port=9528
+              --auth.jwt-secret="$jwtsecret" \
+              --sync.server.keyfile="$server_keyfile" \
+              --sync.server.client-cafile="$server_ca" \
+              --sync.master.jwt-secret="$master_jwt_secret" \
+              --starter.address="${IP}"
