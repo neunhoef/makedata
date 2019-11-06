@@ -1,0 +1,4 @@
+#!/bin/bash
+
+arangosh --server.endpoint tcp://localhost:8823 \
+         --javascript.execute=./setup-replication.js
