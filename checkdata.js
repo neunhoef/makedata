@@ -38,3 +38,7 @@ if (cunique.getIndexes().length != 2) { throw "Durian"; }
 if (cunique.getIndexes()[1].unique != true) { throw "Mandarin"; }
 if (cmulti.getIndexes().length != 5) { throw "Leek"; }
 
+
+let view1 = db._view("view1");
+print(view1.properties(true))
+//if (view1.properties(true).links.cview1 === undefined) {throw "Hass"; }

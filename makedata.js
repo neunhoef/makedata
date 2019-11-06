@@ -38,3 +38,16 @@ cmulti.ensureIndex({type: "geo", fields: ["position"], geoJson: true});
 cmulti.ensureIndex({type: "fulltext", fields: ["text"], minLength: 6});
 
 
+let cview1 = db._create("cview1")
+let view1 =  db._createView("view1", "arangosearch", {});
+let meta = {links: {}};
+meta.links["cview1"] = { includeAllFields: true}
+view1.properties(meta)
+
+cview1.insert({"animal": "cat", "name": "tom"}
+             ,{"animal": "mouse", "name": "jerry"}
+             ,{"animal": "dog", "name": "harry"}
+             )
+
+
+
