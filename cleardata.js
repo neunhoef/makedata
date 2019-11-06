@@ -23,6 +23,7 @@ try { db._drop("cfull"); } catch (e) {}
 try { db._drop("cgeo"); } catch (e) {}
 try { db._drop("cunique"); } catch (e) {}
 try { db._drop("cmulti"); } catch (e) {}
+try { db._drop("cempty"); } catch (e) {}
 
 // Drop database:
 
