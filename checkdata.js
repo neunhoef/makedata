@@ -3,6 +3,9 @@
 //   arangosh USUAL_OPTIONS_INCLUDING_AUTHENTICATION --javascript.execute checkdata.js [DATABASENAME]
 // where DATABASENAME is optional and defaults to "_system".
 
+let internal = require("internal");
+let db = internal.db;
+let print = internal.print;
 let database = "_system";
 
 if (0 < ARGUMENTS.length) {
@@ -52,5 +55,9 @@ if (cmulti.count() != 12346) { throw "Fiat"; }
 
 
 let view1 = db._view("view1");
-print(view1.properties(true))
-//if (view1.properties(true).links.cview1 === undefined) {throw "Hass"; }
+try {
+  print(view1.properties(true))
+  if (view1.properties(true).links.cview1 === undefined) {throw "Hass"; }
+} catch (e) {
+  print(e)
+}
