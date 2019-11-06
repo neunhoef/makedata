@@ -1,0 +1,9 @@
+#!/bin/bash
+
+data="$HOME/release-test-data/cluster-node1"
+mkdir -p "$data"
+exec arangodb --starter.data-dir="$data" \
+              --starter.port=8833 \
+              --starter.unique-port-offsets=true \
+              --server.storage-engine=rocksdb \
+              --auth.jwt-secret=./jwt-secret
