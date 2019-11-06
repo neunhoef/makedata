@@ -1,4 +1,5 @@
 #!/bin/bash
+set -u
 
 export CERTDIR=${CERTDIR:-"./certs"}
 export IP=${IP:-localhost}
@@ -15,7 +16,7 @@ server_keyfile=${CERTDIR}/cluster2-tls.keyfile
 server_ca=${CERTDIR}/client-auth-ca.crt
 master_jwt_secret=${CERTDIR}/cluster2-syncmaster.jwtsecret
 
-for f in "$jwtsecret" "$server_keyfile" "$server_ca" "$master_jwt_secret"; do
+for f in "$jwt_secret" "$server_keyfile" "$server_ca" "$master_jwt_secret"; do
     [[ -f "$f" ]] || ferr "file not present $f"
 done
 
@@ -23,7 +24,7 @@ exec arangodb --starter.data-dir="$data" \
               --starter.port=8833 \
               --starter.sync \
               --starter.local \
-              --auth.jwt-secret="$jwtsecret" \
+              --auth.jwt-secret="$jwt_secret" \
               --sync.server.keyfile="$server_keyfile" \
               --sync.server.client-cafile="$server_ca" \
               --sync.master.jwt-secret="$master_jwt_secret" \
