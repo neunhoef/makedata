@@ -1,0 +1,7 @@
+#!/bin/bash
+
+data="$HOME/release-test-data/master"
+mkdir -p "$data"
+exec arangodb --starter.data-dir="$data" \
+              --starter.mode single \
+              --starter.port 8811
