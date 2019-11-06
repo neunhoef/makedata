@@ -22,7 +22,7 @@ let chash = db._create("chash", {numberOfShards: 3, replicationFactor: 2});
 let cskip = db._create("cskip", {numberOfShards: 1, replicationFactor: 1});
 let cfull = db._create("cfull", {numberOfShards: 3, replicationFactor: 1});
 let cgeo = db._create("cgeo", {numberOfShards: 3, replicationFactor: 2});
-let cunique = db._create("cunique", {numberOfShards: 6, replicationFactor: 1});
+let cunique = db._create("cunique", {numberOfShards: 1, replicationFactor: 1});
 let cmulti = db._create("cmulti", {numberOfShards: 3, replicationFactor: 2});
 let cempty = db._create("cempty", {numberOfShards: 3, replicationFactor: 1});
 
