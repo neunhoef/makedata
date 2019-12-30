@@ -15,8 +15,8 @@ server="${server:-c9}"
 destination="${destination:-$HOME/release-test-packages}"
 os="${os:-Linux}" #Linux, MacOSX or Windows
 ext="${ext:-deb}"
-version="${version:-3.6.0~rc.1-1}"
-old_version="${old_version:-3.5.2-1}"
+version="${version:-3.6.0-1}"
+old_version="${old_version:-3.5.3-1}"
 
 if [[ $os == "MacOSX" ]]; then
     ext="dmg"

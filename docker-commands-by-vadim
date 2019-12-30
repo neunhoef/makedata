@@ -1,21 +1,21 @@
 #arangod docker SS NO auth:
 #==========================
 #--------------------------
-docker run --rm -e ARANGO_NO_AUTH=1 -p 9529:9529 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:9529
+docker run --rm -e ARANGO_NO_AUTH=1 -p 9529:9529 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:9529
 #--------------------------
 #==========================
 
 #arangod docker SS WITH auth (ARANGO_ROOT_PASSWORD):
 #==========================
 #--------------------------
-docker run --rm -e ARANGO_ROOT_PASSWORD="" -p 9529:9529 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:9529
+docker run --rm -e ARANGO_ROOT_PASSWORD="" -p 9529:9529 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:9529
 #--------------------------
 #==========================
 
 #arangod docker SS WITH auth (ARANGO_RANDOM_ROOT_PASSWORD):
 #==========================
 #--------------------------
-docker run --rm -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 9529:9529 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:9529
+docker run --rm -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 9529:9529 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:9529
 #--------------------------
 #==========================
 
@@ -24,7 +24,7 @@ docker run --rm -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 9529:9529 arangodb/arangodb-
 #--------------------------
 docker volume rm arangodb
 docker volume create arangodb
-docker run -it --name adb --rm -p 9528:9528 -v arangodb:/data -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --starter.mode=single --docker.image=arangodb/arangodb-preview:3.6.0-rc.1
+docker run -it --name adb --rm -p 9528:9528 -v arangodb:/data -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --starter.mode=single --docker.image=arangodb/enterprise-preview:3.6.0
 #--------------------------
 #==========================
 
@@ -33,7 +33,7 @@ docker run -it --name adb --rm -p 9528:9528 -v arangodb:/data -v /var/run/docker
 #--------------------------
 docker volume rm arangodb
 docker volume create arangodb
-docker run -it --name adb --rm -p 9528:9528 -v arangodb:/data -v /var/run/docker.sock:/var/run/docker.sock -v /home/vadim:/secret arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --starter.mode=single --docker.image=arangodb/arangodb-preview:3.6.0-rc.1 --auth.jwt-secret=/secret/jwtSecret
+docker run -it --name adb --rm -p 9528:9528 -v arangodb:/data -v /var/run/docker.sock:/var/run/docker.sock -v /home/vadim:/secret arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --starter.mode=single --docker.image=arangodb/enterprise-preview:3.6.0 --auth.jwt-secret=/secret/jwtSecret
 #--------------------------
 #==========================
 
@@ -42,29 +42,29 @@ docker run -it --name adb --rm -p 9528:9528 -v arangodb:/data -v /var/run/docker
 #==========
 #Agencies:
 #---------
-docker run -e ARANGO_NO_AUTH=1 -p 127.0.0.1:5001:5001 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:5001 --agency.my-address=tcp://127.0.0.1:5001 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent1 &
+docker run -e ARANGO_NO_AUTH=1 -p 127.0.0.1:5001:5001 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5001 --agency.my-address=tcp://127.0.0.1:5001 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent1 &
 
-docker run -e ARANGO_NO_AUTH=1 -p 127.0.0.1:5002:5002 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:5002 --agency.my-address=tcp://127.0.0.1:5002 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent2 &
+docker run -e ARANGO_NO_AUTH=1 -p 127.0.0.1:5002:5002 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5002 --agency.my-address=tcp://127.0.0.1:5002 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent2 &
 
-docker run -e ARANGO_NO_AUTH=1 -p 127.0.0.1:5003:5003 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:5003 --agency.my-address=tcp://127.0.0.1:5003 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent3 &
+docker run -e ARANGO_NO_AUTH=1 -p 127.0.0.1:5003:5003 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5003 --agency.my-address=tcp://127.0.0.1:5003 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent3 &
 #---------
 
 #DBServers:
 #----------
-docker run -e ARANGO_NO_AUTH=1 -p 127.0.0.1:6001:6001 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:6001 --cluster.my-address tcp://127.0.0.1:6001 --cluster.my-role DBSERVER --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003  --database.directory singleserver6001 &
+docker run -e ARANGO_NO_AUTH=1 -p 127.0.0.1:6001:6001 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6001 --cluster.my-address tcp://127.0.0.1:6001 --cluster.my-role DBSERVER --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003  --database.directory singleserver6001 &
 
-docker run -e ARANGO_NO_AUTH=1 -p 127.0.0.1:6002:6002 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:6002 --cluster.my-address tcp://127.0.0.1:6002 --cluster.my-role DBSERVER --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --database.directory singleserver6002 &
+docker run -e ARANGO_NO_AUTH=1 -p 127.0.0.1:6002:6002 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6002 --cluster.my-address tcp://127.0.0.1:6002 --cluster.my-role DBSERVER --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --database.directory singleserver6002 &
 
-docker run -e ARANGO_NO_AUTH=1 -p 127.0.0.1:6003:6003 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:6003 --cluster.my-address tcp://127.0.0.1:6003 --cluster.my-role DBSERVER --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --database.directory singleserver6003 &
+docker run -e ARANGO_NO_AUTH=1 -p 127.0.0.1:6003:6003 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6003 --cluster.my-address tcp://127.0.0.1:6003 --cluster.my-role DBSERVER --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --database.directory singleserver6003 &
 #----------
 
 #Coordinators:
 #----------
-docker run -e ARANGO_NO_AUTH=1 -p 127.0.0.1:7001:7001 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:7001 --cluster.my-address tcp://127.0.0.1:7001 --cluster.my-role COORDINATOR --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --database.directory coordinator7001 &
+docker run -e ARANGO_NO_AUTH=1 -p 127.0.0.1:7001:7001 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:7001 --cluster.my-address tcp://127.0.0.1:7001 --cluster.my-role COORDINATOR --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --database.directory coordinator7001 &
 
-docker run -e ARANGO_NO_AUTH=1 -p 127.0.0.1:7002:7002 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:7002 --cluster.my-address tcp://127.0.0.1:7002 --cluster.my-role COORDINATOR --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --database.directory coordinator7002 &
+docker run -e ARANGO_NO_AUTH=1 -p 127.0.0.1:7002:7002 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:7002 --cluster.my-address tcp://127.0.0.1:7002 --cluster.my-role COORDINATOR --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --database.directory coordinator7002 &
 
-docker run -e ARANGO_NO_AUTH=1 -p 127.0.0.1:7003:7003 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:7003 --cluster.my-address tcp://127.0.0.1:7003 --cluster.my-role COORDINATOR --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --database.directory coordinator7003 &
+docker run -e ARANGO_NO_AUTH=1 -p 127.0.0.1:7003:7003 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:7003 --cluster.my-address tcp://127.0.0.1:7003 --cluster.my-role COORDINATOR --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --database.directory coordinator7003 &
 #----------
 #==========
 
@@ -72,29 +72,29 @@ docker run -e ARANGO_NO_AUTH=1 -p 127.0.0.1:7003:7003 arangodb/arangodb-preview:
 #==========
 #Agencies:
 #---------
-docker run -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 127.0.0.1:5001:5001 -v /home/vadim:/secret arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:5001 --agency.my-address=tcp://127.0.0.1:5001 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent1 --server.jwt-secret /secret/jwtSecret &
+docker run -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 127.0.0.1:5001:5001 -v /home/vadim:/secret arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5001 --agency.my-address=tcp://127.0.0.1:5001 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent1 --server.jwt-secret /secret/jwtSecret &
 
-docker run -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 127.0.0.1:5002:5002 -v /home/vadim:/secret arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:5002 --agency.my-address=tcp://127.0.0.1:5002 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent2 --server.jwt-secret /secret/jwtSecret &
+docker run -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 127.0.0.1:5002:5002 -v /home/vadim:/secret arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5002 --agency.my-address=tcp://127.0.0.1:5002 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent2 --server.jwt-secret /secret/jwtSecret &
 
-docker run -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 127.0.0.1:5003:5003 -v /home/vadim:/secret arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:5003 --agency.my-address=tcp://127.0.0.1:5003 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent3 --server.jwt-secret /secret/jwtSecret &
+docker run -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 127.0.0.1:5003:5003 -v /home/vadim:/secret arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5003 --agency.my-address=tcp://127.0.0.1:5003 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent3 --server.jwt-secret /secret/jwtSecret &
 #---------
 
 #DBServers:
 #----------
-docker run -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 127.0.0.1:6001:6001 -v /home/vadim:/secret arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:6001 --cluster.my-address tcp://127.0.0.1:6001 --cluster.my-role DBSERVER --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003  --database.directory singleserver6001 --server.jwt-secret /secret/jwtSecret &
+docker run -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 127.0.0.1:6001:6001 -v /home/vadim:/secret arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6001 --cluster.my-address tcp://127.0.0.1:6001 --cluster.my-role DBSERVER --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003  --database.directory singleserver6001 --server.jwt-secret /secret/jwtSecret &
 
-docker run -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 127.0.0.1:6002:6002 -v /home/vadim:/secret arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:6002 --cluster.my-address tcp://127.0.0.1:6002 --cluster.my-role DBSERVER --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --database.directory singleserver6002 --server.jwt-secret /secret/jwtSecret &
+docker run -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 127.0.0.1:6002:6002 -v /home/vadim:/secret arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6002 --cluster.my-address tcp://127.0.0.1:6002 --cluster.my-role DBSERVER --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --database.directory singleserver6002 --server.jwt-secret /secret/jwtSecret &
 
-docker run -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 127.0.0.1:6003:6003 -v /home/vadim:/secret arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:6003 --cluster.my-address tcp://127.0.0.1:6003 --cluster.my-role DBSERVER --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --database.directory singleserver6003 --server.jwt-secret /secret/jwtSecret &
+docker run -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 127.0.0.1:6003:6003 -v /home/vadim:/secret arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6003 --cluster.my-address tcp://127.0.0.1:6003 --cluster.my-role DBSERVER --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --database.directory singleserver6003 --server.jwt-secret /secret/jwtSecret &
 #----------
 
 #Coordinators:
 #----------
-docker run -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 127.0.0.1:7001:7001 -v /home/vadim:/secret arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:7001 --cluster.my-address tcp://127.0.0.1:7001 --cluster.my-role COORDINATOR --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --database.directory coordinator7001 --server.jwt-secret /secret/jwtSecret &
+docker run -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 127.0.0.1:7001:7001 -v /home/vadim:/secret arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:7001 --cluster.my-address tcp://127.0.0.1:7001 --cluster.my-role COORDINATOR --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --database.directory coordinator7001 --server.jwt-secret /secret/jwtSecret &
 
-docker run -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 127.0.0.1:7002:7002 -v /home/vadim:/secret arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:7002 --cluster.my-address tcp://127.0.0.1:7002 --cluster.my-role COORDINATOR --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --database.directory coordinator7002 --server.jwt-secret /secret/jwtSecret &
+docker run -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 127.0.0.1:7002:7002 -v /home/vadim:/secret arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:7002 --cluster.my-address tcp://127.0.0.1:7002 --cluster.my-role COORDINATOR --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --database.directory coordinator7002 --server.jwt-secret /secret/jwtSecret &
 
-docker run -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 127.0.0.1:7003:7003 -v /home/vadim:/secret arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:7003 --cluster.my-address tcp://127.0.0.1:7003 --cluster.my-role COORDINATOR --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --database.directory coordinator7003 --server.jwt-secret /secret/jwtSecret &
+docker run -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 127.0.0.1:7003:7003 -v /home/vadim:/secret arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:7003 --cluster.my-address tcp://127.0.0.1:7003 --cluster.my-role COORDINATOR --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --database.directory coordinator7003 --server.jwt-secret /secret/jwtSecret &
 #----------
 #==========
 
@@ -102,64 +102,64 @@ docker run -e ARANGO_RANDOM_ROOT_PASSWORD=1 -p 127.0.0.1:7003:7003 -v /home/vadi
 #==========
 docker rm adb1 adb2 adb3
 
-docker run -it --name adb1 --rm -p 10000:9528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/arangodb-preview:3.6.0-rc.1 --auth.jwt-secret=/secret/jwtSecret
+docker run -it --name adb1 --rm -p 10000:9528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/enterprise-preview:3.6.0 --auth.jwt-secret=/secret/jwtSecret
 
-docker run -it --name adb2 --rm -p 11000:9528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/arangodb-preview:3.6.0-rc.1 --starter.join 127.0.0.1:10000 --auth.jwt-secret=/secret/jwtSecret
+docker run -it --name adb2 --rm -p 11000:9528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/enterprise-preview:3.6.0 --starter.join 127.0.0.1:10000 --auth.jwt-secret=/secret/jwtSecret
 
-docker run -it --name adb3 --rm -p 12000:9528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/arangodb-preview:3.6.0-rc.1 --starter.join 127.0.0.1:10000 --auth.jwt-secret=/secret/jwtSecret
+docker run -it --name adb3 --rm -p 12000:9528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/enterprise-preview:3.6.0 --starter.join 127.0.0.1:10000 --auth.jwt-secret=/secret/jwtSecret
 #==========
 
 #arangodb docker CLUSTER NO auth:
 #==========
 docker rm adb1 adb2 adb3
 
-docker run -it --name adb1 --rm -p 10000:9528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/arangodb-preview:3.6.0-rc.1
+docker run -it --name adb1 --rm -p 10000:9528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/enterprise-preview:3.6.0
 
-docker run -it --name adb2 --rm -p 11000:9528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/arangodb-preview:3.6.0-rc.1 --starter.join 127.0.0.1:10000
+docker run -it --name adb2 --rm -p 11000:9528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/enterprise-preview:3.6.0 --starter.join 127.0.0.1:10000
 
-docker run -it --name adb3 --rm -p 12000:9528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/arangodb-preview:3.6.0-rc.1 --starter.join 127.0.0.1:10000
+docker run -it --name adb3 --rm -p 12000:9528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/enterprise-preview:3.6.0 --starter.join 127.0.0.1:10000
 #==========
 
 #arangodb docker AF WITH auth:
 #==========
 docker rm adb1 adb2 adb3
 
-docker run -it --name adb1 --rm -p 10000:8528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.mode=single --docker.image=arangodb/arangodb-preview:3.6.0-rc.1 --starter.mode activefailover --auth.jwt-secret=/secret/jwtSecret
+docker run -it --name adb1 --rm -p 10000:8528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.mode=single --docker.image=arangodb/enterprise-preview:3.6.0 --starter.mode activefailover --auth.jwt-secret=/secret/jwtSecret
 
-docker run -it --name adb2 --rm -p 11000:9528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/arangodb-preview:3.6.0-rc.1 --starter.mode activefailover --starter.join 127.0.0.1:10000 --auth.jwt-secret=/secret/jwtSecret
+docker run -it --name adb2 --rm -p 11000:9528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/enterprise-preview:3.6.0 --starter.mode activefailover --starter.join 127.0.0.1:10000 --auth.jwt-secret=/secret/jwtSecret
 
-docker run -it --name adb3 --rm -p 12000:10528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 10528 --docker.image=arangodb/arangodb-preview:3.6.0-rc.1 --starter.mode activefailover --starter.join 127.0.0.1:10000 --auth.jwt-secret=/secret/jwtSecret
+docker run -it --name adb3 --rm -p 12000:10528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 10528 --docker.image=arangodb/enterprise-preview:3.6.0 --starter.mode activefailover --starter.join 127.0.0.1:10000 --auth.jwt-secret=/secret/jwtSecret
 #==========
 
 #arangodb docker AF NO auth:
 #==========
 docker rm adb1 adb2 adb3
 
-docker run -it --name adb1 --rm -p 10000:8528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.mode=single --docker.image=arangodb/arangodb-preview:3.6.0-rc.1 --starter.mode activefailover
+docker run -it --name adb1 --rm -p 10000:8528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.mode=single --docker.image=arangodb/enterprise-preview:3.6.0 --starter.mode activefailover
 
-docker run -it --name adb2 --rm -p 11000:9528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/arangodb-preview:3.6.0-rc.1 --starter.mode activefailover --starter.join 127.0.0.1:10000
+docker run -it --name adb2 --rm -p 11000:9528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/enterprise-preview:3.6.0 --starter.mode activefailover --starter.join 127.0.0.1:10000
 
-docker run -it --name adb3 --rm -p 12000:10528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 10528 --docker.image=arangodb/arangodb-preview:3.6.0-rc.1 --starter.mode activefailover --starter.join 127.0.0.1:10000
+docker run -it --name adb3 --rm -p 12000:10528 -v /home/vadim:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 10528 --docker.image=arangodb/enterprise-preview:3.6.0 --starter.mode activefailover --starter.join 127.0.0.1:10000
 #==========
 
 #arangod docker AF NO auth:
 #==========
 #Agencies:
 #---------
-docker run --rm -e ARANGO_NO_AUTH=1 -p 127.0.0.1:5001:5001 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:5001 --agency.my-address=tcp://127.0.0.1:5001 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent1 &
+docker run --rm -e ARANGO_NO_AUTH=1 -p 127.0.0.1:5001:5001 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5001 --agency.my-address=tcp://127.0.0.1:5001 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent1 &
 
-docker run --rm -e ARANGO_NO_AUTH=1 -p 127.0.0.1:5002:5002 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:5002 --agency.my-address=tcp://127.0.0.1:5002 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent2 &
+docker run --rm -e ARANGO_NO_AUTH=1 -p 127.0.0.1:5002:5002 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5002 --agency.my-address=tcp://127.0.0.1:5002 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent2 &
 
-docker run --rm -e ARANGO_NO_AUTH=1 -p 127.0.0.1:5003:5003 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:5003 --agency.my-address=tcp://127.0.0.1:5003 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent3 &
+docker run --rm -e ARANGO_NO_AUTH=1 -p 127.0.0.1:5003:5003 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5003 --agency.my-address=tcp://127.0.0.1:5003 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent3 &
 #---------
 
 #DBServers:
 #----------
-docker run --rm -e ARANGO_NO_AUTH=1 -p 127.0.0.1:6001:6001 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:6001 --cluster.my-address tcp://127.0.0.1:6001 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6001 &
+docker run --rm -e ARANGO_NO_AUTH=1 -p 127.0.0.1:6001:6001 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6001 --cluster.my-address tcp://127.0.0.1:6001 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6001 &
 
-docker run --rm -e ARANGO_NO_AUTH=1 -p 127.0.0.1:6002:6002 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:6002 --cluster.my-address tcp://127.0.0.1:6002 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6002 &
+docker run --rm -e ARANGO_NO_AUTH=1 -p 127.0.0.1:6002:6002 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6002 --cluster.my-address tcp://127.0.0.1:6002 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6002 &
 
-docker run --rm -e ARANGO_NO_AUTH=1 -p 127.0.0.1:6003:6003 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:6003 --cluster.my-address tcp://127.0.0.1:6003 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6003 &
+docker run --rm -e ARANGO_NO_AUTH=1 -p 127.0.0.1:6003:6003 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6003 --cluster.my-address tcp://127.0.0.1:6003 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6003 &
 #---------
 ==========
 
@@ -167,19 +167,19 @@ docker run --rm -e ARANGO_NO_AUTH=1 -p 127.0.0.1:6003:6003 arangodb/arangodb-pre
 #==========
 #Agencies:
 #---------
-docker run --rm -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:5001:5001 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:5001 --agency.my-address=tcp://127.0.0.1:5001 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent1 --server.jwt-secret xyu &
+docker run --rm -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:5001:5001 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5001 --agency.my-address=tcp://127.0.0.1:5001 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent1 --server.jwt-secret xyu &
 
-docker run --rm -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:5002:5002 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:5002 --agency.my-address=tcp://127.0.0.1:5002 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent2 --server.jwt-secret xyu &
+docker run --rm -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:5002:5002 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5002 --agency.my-address=tcp://127.0.0.1:5002 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent2 --server.jwt-secret xyu &
 
-docker run --rm -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:5003:5003 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:5003 --agency.my-address=tcp://127.0.0.1:5003 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent3 --server.jwt-secret xyu &
+docker run --rm -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:5003:5003 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5003 --agency.my-address=tcp://127.0.0.1:5003 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent3 --server.jwt-secret xyu &
 #---------
 
 #DBServers:
 #----------
-docker run --rm -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:6001:6001 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:6001 --cluster.my-address tcp://127.0.0.1:6001 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6001 --server.jwt-secret xyu &
+docker run --rm -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:6001:6001 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6001 --cluster.my-address tcp://127.0.0.1:6001 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6001 --server.jwt-secret xyu &
 
-docker run --rm -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:6002:6002 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:6002 --cluster.my-address tcp://127.0.0.1:6002 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6002 --server.jwt-secret xyu &
+docker run --rm -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:6002:6002 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6002 --cluster.my-address tcp://127.0.0.1:6002 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6002 --server.jwt-secret xyu &
 
-docker run --rm -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:6003:6003 arangodb/arangodb-preview:3.6.0-rc.1 arangod --server.endpoint tcp://0.0.0.0:6003 --cluster.my-address tcp://127.0.0.1:6003 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6003 --server.jwt-secret xyu &
+docker run --rm -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:6003:6003 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6003 --cluster.my-address tcp://127.0.0.1:6003 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6003 --server.jwt-secret xyu &
 #---------
 #==========
