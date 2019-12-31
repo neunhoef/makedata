@@ -31,8 +31,9 @@ fi
 if [[ $auth == "no-auth" ]]; then
     cmd+=( "-e" "ARANGO_NO_AUTH=1 " )
 else
-    echo "with auth not implemented"
-    exit 1
+    cmd+=( "-e" "ARANGO_ROOT_PASSWORD=$password"
+           "-v" "$secret_dir:/secret"
+    )
 fi
 
 case "${server_type}-${number}" in
@@ -87,6 +88,12 @@ case "${server_type}" in
 esac
 
 cmd+=( '--database.directory' "af-manual-${server_type}-${number}" )
+
+if [[ $auth == "no-auth" ]]; then
+    echo "no secret to add"
+else
+    cmd+=( "--server.jwt-secret-keyfile=/secret/${secret_file##*/}" )
+fi
 
 echo "running: ${cmd[@]}"
 sleep 3
