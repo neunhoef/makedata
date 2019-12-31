@@ -3,16 +3,14 @@ set -u
 
 . config.bash
 
-mode=$1        # arangod # TODO add starter
-auth=$2        # no-auth # TODO auth
-edition=$3     # enterprise community
-server_type=$4 # agent db
-number=$5      # 1 2 3
+edition=$1     # enterprise community
+auth=$2        # no-auth
+server_type=$3 # agent dba starter
+number=$4      # 1 2 3
 
 echo "configuration"
-echo "mode:        $mode"
-echo "auth:        $auth"
 echo "edition:     $edition"
+echo "auth:        $auth"
 echo "server_type: $server_type"
 echo "number:      $number"
 
@@ -35,64 +33,89 @@ else
            "-v" "$secret_dir:/secret"
     )
 fi
-
 case "${server_type}-${number}" in
-    agent-1)
-        port=5001
+    starter-1)
+        portmap="10000:8528"
     ;;
-    agent-2)
-        port=5002
+    starter-1)
+        portmap="11000:9528"
     ;;
-    agent-3)
+    starter-2)
+        portmap="12000:10528"
+    ;;
+    manual-agent-3)
         port=5003
     ;;
-    db-1)
+    manual-db-1)
         port=6001
     ;;
-    db-2)
+    manual-db-2)
         port=6002
     ;;
-    db-3)
+    manual-db-3)
         port=6003
     ;;
     *)
-        echo "server_type number combination not supported"
+        echo "mode server_type number combination not supported - ${mode}-${server_type}-${number}"
     ;;
 esac
 
 
-cmd+=( "--net" "host" "$image" 'arangod' '--server.endpoint' "tcp://0.0.0.0:$port")
-#cmd+=( "-p" "127.0.0.1:$port:$port" "$image" 'arangod' '--server.endpoint' "tcp://0.0.0.0:$port")
+if [[ -n "portmap" ]]; then
+    cmd+=( "-p" "$portmap" )
+else
+    cmd+=( "--net" "host" )
+fi
 
 case "${server_type}" in
+    starter)
+        cmd+=(
+           '-v' '/var/run/docker.sock:/var/run/docker.sock'
+           'arangodb/arangodb-starter'
+           '--starter.address=127.0.0.1'
+           "--docker.image=$image"
+           '--starter.mode' 'activefailover'
+        )
+
+        if (( number > 1 )); then
+            cmd+=( "--starter.join" "127.0.0.1:10000" )
+        fi
+    ;;
     agent)
         cmd+=(
+            "$image" 'arangod'
+            "--server.endpoint" "tcp://0.0.0.0:$port"
             "--agency.my-address=tcp://127.0.0.1:$port"
             "--agency.activate" "true"
             "--agency.size" "3"
             "--agency.endpoint" "tcp://127.0.0.1:5001"
             "--agency.supervision" "true"
+            '--database.directory' "af-manual-${server_type}-${number}"
         )
     ;;
     db)
         cmd+=(
+            "$image" 'arangod'
+            "--server.endpoint" "tcp://0.0.0.0:$port"
             "--cluster.my-address=tcp://127.0.0.1:$port"
             "--cluster.my-role" "SINGLE"
-            "--agency.activate" "true"
             "--cluster.agency-endpoint" "tcp://127.0.0.1:5001"
             "--cluster.agency-endpoint" "tcp://127.0.0.1:5002"
             "--cluster.agency-endpoint" "tcp://127.0.0.1:5003"
             "--replication.automatic-failover" "true"
+            '--database.directory' "af-manual-${server_type}-${number}"
         )
     ;;
 esac
 
-cmd+=( '--database.directory' "af-manual-${server_type}-${number}" )
-
 if [[ $auth == "no-auth" ]]; then
     echo "no secret to add"
 else
-    cmd+=( "--server.jwt-secret-keyfile=/secret/${secret_file##*/}" )
+    auth_flag="--server.jwt-secret-keyfile"
+    if [[ $server_type == "starter" ]]; then
+        auth_flag="--auth.jwt-secret"
+    fi
+    cmd+=( "$auth_flag=/secret/${secret_file##*/}" )
 fi
 
 echo "running: ${cmd[@]}"
