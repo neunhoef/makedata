@@ -1,0 +1,72 @@
+#!/bin/bash
+set -u
+
+image="arangodb/enterprise-preview:3.6.0"
+
+mode=$1        # arangod # TODO add starter
+auth=$2        # no-auth # TODO auth
+edition=$3     # enterprise community
+server_type=$4 # agent db
+number=$5      # 1 2 3
+
+
+cmd=(
+    "docker" "run" "--rm"
+)
+
+if [[ $edition == "enterprise" ]]; then
+    cmd+=( "-e" "ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY}" )
+fi
+
+if [[ $auth == "no-auth" ]]; then
+    cmd+=( "-e" "ARANGO_NO_AUTH=1 " )
+fi
+
+case "${server_type}-${number}" in
+    agent-1)
+        port=5001
+    ;;
+    agent-2)
+        port=5002
+    ;;
+    agent-3)
+        port=5003
+    ;;
+    db-1)
+        port=6001
+    ;;
+    db-2)
+        port=6002
+    ;;
+    db-3)
+        port=6003
+    ;;
+esac
+
+
+cmd+=( "-p" "127.0.0.1:$port:$port" "$image" 'arangod' '--server.endpoint' "tcp://0.0.0.0:$port")
+
+case "${server_type}" in
+    agent)
+        cmd+=(
+            "--agency.my-address=tcp://127.0.0.1:$port"
+            "--agency.activate" "true"
+            "--agency.size" "3"
+            "--agency.endpoint" "tcp://127.0.0.1:5001"
+            "--agency.supervision" "true"
+        )
+    ;;
+    db)
+        cmd+=(
+            "--cluster.my-address=tcp://127.0.0.1:$port"
+            "--cluster.my-role" "SINGLE"
+            "--agency.activate" "true"
+            "--cluster.agency.endpoint" "tcp://127.0.0.1:5001"
+            "--cluster.agency.endpoint" "tcp://127.0.0.1:5002"
+            "--cluster.agency.endpoint" "tcp://127.0.0.1:5003"
+            "--replication.automatic-failover" "true"
+        )
+    ;;
+esac
+
+cmd+=( '--database.directory' "af-manual-${server_type}-${number}" )
