@@ -9,6 +9,13 @@ edition=$3     # enterprise community
 server_type=$4 # agent db
 number=$5      # 1 2 3
 
+echo "configuration"
+echo "mode:        $mode"
+echo "auth:        $auth"
+echo "edition:     $edition"
+echo "server_type: $server_type"
+echo "number:      $number"
+
 
 cmd=(
     "docker" "run" "--rm"
@@ -16,10 +23,16 @@ cmd=(
 
 if [[ $edition == "enterprise" ]]; then
     cmd+=( "-e" "ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY}" )
+else
+    echo "not enterprise"
+    exit 1
 fi
 
 if [[ $auth == "no-auth" ]]; then
     cmd+=( "-e" "ARANGO_NO_AUTH=1 " )
+else
+    echo "with auth not implemented"
+    exit 1
 fi
 
 case "${server_type}-${number}" in
@@ -41,6 +54,9 @@ case "${server_type}-${number}" in
     db-3)
         port=6003
     ;;
+    *)
+        echo "server_type number combination not supported"
+    ;;
 esac
 
 
@@ -61,12 +77,16 @@ case "${server_type}" in
             "--cluster.my-address=tcp://127.0.0.1:$port"
             "--cluster.my-role" "SINGLE"
             "--agency.activate" "true"
-            "--cluster.agency.endpoint" "tcp://127.0.0.1:5001"
-            "--cluster.agency.endpoint" "tcp://127.0.0.1:5002"
-            "--cluster.agency.endpoint" "tcp://127.0.0.1:5003"
+            "--cluster.agency-endpoint" "tcp://127.0.0.1:5001"
+            "--cluster.agency-endpoint" "tcp://127.0.0.1:5002"
+            "--cluster.agency-endpoint" "tcp://127.0.0.1:5003"
             "--replication.automatic-failover" "true"
         )
     ;;
 esac
 
 cmd+=( '--database.directory' "af-manual-${server_type}-${number}" )
+
+echo "running: ${cmd[@]}"
+sleep 3
+"${cmd[@]}"
