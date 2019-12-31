@@ -38,6 +38,102 @@ docker run -it --name adb --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -p 95
 #==========================
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+#arangodb-starter docker AF WITH auth:
+#==========
+docker rm adb1 adb2 adb3
+
+docker run -it --name adb1 --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -p 10000:8528 -v $HOME:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.mode=single --docker.image=arangodb/enterprise-preview:3.6.0 --starter.mode activefailover --auth.jwt-secret=/secret/jwtSecret
+
+docker run -it --name adb2 --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -p 11000:9528 -v $HOME:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/enterprise-preview:3.6.0 --starter.mode activefailover --starter.join 127.0.0.1:10000 --auth.jwt-secret=/secret/jwtSecret
+
+docker run -it --name adb3 --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -p 12000:10528 -v $HOME:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 10528 --docker.image=arangodb/enterprise-preview:3.6.0 --starter.mode activefailover --starter.join 127.0.0.1:10000 --auth.jwt-secret=/secret/jwtSecret
+#==========
+
+#arangodb-starter docker AF NO auth:
+#==========
+docker rm adb1 adb2 adb3
+
+docker run -it --name adb1 --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -p 10000:8528 -v $HOME:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.mode=single --docker.image=arangodb/enterprise-preview:3.6.0 --starter.mode activefailover
+
+docker run -it --name adb2 --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -p 11000:9528 -v $HOME:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/enterprise-preview:3.6.0 --starter.mode activefailover --starter.join 127.0.0.1:10000
+
+docker run -it --name adb3 --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -p 12000:10528 -v $HOME:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 10528 --docker.image=arangodb/enterprise-preview:3.6.0 --starter.mode activefailover --starter.join 127.0.0.1:10000
+#==========
+
+#arangod docker AF NO auth:
+#==========
+#Agencies:
+#---------
+docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_NO_AUTH=1 -p 127.0.0.1:5001:5001 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5001 --agency.my-address=tcp://127.0.0.1:5001 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent1 &
+
+docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_NO_AUTH=1 -p 127.0.0.1:5002:5002 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5002 --agency.my-address=tcp://127.0.0.1:5002 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent2 &
+
+docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_NO_AUTH=1 -p 127.0.0.1:5003:5003 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5003 --agency.my-address=tcp://127.0.0.1:5003 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent3 &
+#---------
+
+#DBServers:
+#----------
+docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_NO_AUTH=1 -p 127.0.0.1:6001:6001 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6001 --cluster.my-address tcp://127.0.0.1:6001 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6001 &
+
+docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_NO_AUTH=1 -p 127.0.0.1:6002:6002 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6002 --cluster.my-address tcp://127.0.0.1:6002 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6002 &
+
+docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_NO_AUTH=1 -p 127.0.0.1:6003:6003 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6003 --cluster.my-address tcp://127.0.0.1:6003 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6003 &
+#---------
+==========
+
+#arangod docker AF WITH auth:
+#==========
+#Agencies:
+#---------
+docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:5001:5001 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5001 --agency.my-address=tcp://127.0.0.1:5001 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent1 --server.jwt-secret xyu &
+
+docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:5002:5002 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5002 --agency.my-address=tcp://127.0.0.1:5002 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent2 --server.jwt-secret xyu &
+
+docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:5003:5003 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5003 --agency.my-address=tcp://127.0.0.1:5003 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent3 --server.jwt-secret xyu &
+#---------
+
+#DBServers:
+#----------
+docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:6001:6001 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6001 --cluster.my-address tcp://127.0.0.1:6001 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6001 --server.jwt-secret xyu &
+
+docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:6002:6002 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6002 --cluster.my-address tcp://127.0.0.1:6002 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6002 --server.jwt-secret xyu &
+
+docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:6003:6003 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6003 --cluster.my-address tcp://127.0.0.1:6003 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6003 --server.jwt-secret xyu &
+#---------
+#==========
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #arangod docker CLUSTER NO auth:
 #==========
 #Agencies:
@@ -118,68 +214,4 @@ docker run -it --name adb1 --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -p 1
 docker run -it --name adb2 --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -p 11000:9528 -v $HOME:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/enterprise-preview:3.6.0 --starter.join 127.0.0.1:10000
 
 docker run -it --name adb3 --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -p 12000:9528 -v $HOME:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/enterprise-preview:3.6.0 --starter.join 127.0.0.1:10000
-#==========
-
-#arangodb docker AF WITH auth:
-#==========
-docker rm adb1 adb2 adb3
-
-docker run -it --name adb1 --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -p 10000:8528 -v $HOME:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.mode=single --docker.image=arangodb/enterprise-preview:3.6.0 --starter.mode activefailover --auth.jwt-secret=/secret/jwtSecret
-
-docker run -it --name adb2 --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -p 11000:9528 -v $HOME:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/enterprise-preview:3.6.0 --starter.mode activefailover --starter.join 127.0.0.1:10000 --auth.jwt-secret=/secret/jwtSecret
-
-docker run -it --name adb3 --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -p 12000:10528 -v $HOME:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 10528 --docker.image=arangodb/enterprise-preview:3.6.0 --starter.mode activefailover --starter.join 127.0.0.1:10000 --auth.jwt-secret=/secret/jwtSecret
-#==========
-
-#arangodb docker AF NO auth:
-#==========
-docker rm adb1 adb2 adb3
-
-docker run -it --name adb1 --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -p 10000:8528 -v $HOME:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.mode=single --docker.image=arangodb/enterprise-preview:3.6.0 --starter.mode activefailover
-
-docker run -it --name adb2 --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -p 11000:9528 -v $HOME:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 9528 --docker.image=arangodb/enterprise-preview:3.6.0 --starter.mode activefailover --starter.join 127.0.0.1:10000
-
-docker run -it --name adb3 --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -p 12000:10528 -v $HOME:/secret -v /var/run/docker.sock:/var/run/docker.sock arangodb/arangodb-starter --starter.address=127.0.0.1 --starter.port 10528 --docker.image=arangodb/enterprise-preview:3.6.0 --starter.mode activefailover --starter.join 127.0.0.1:10000
-#==========
-
-#arangod docker AF NO auth:
-#==========
-#Agencies:
-#---------
-docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_NO_AUTH=1 -p 127.0.0.1:5001:5001 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5001 --agency.my-address=tcp://127.0.0.1:5001 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent1 &
-
-docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_NO_AUTH=1 -p 127.0.0.1:5002:5002 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5002 --agency.my-address=tcp://127.0.0.1:5002 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent2 &
-
-docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_NO_AUTH=1 -p 127.0.0.1:5003:5003 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5003 --agency.my-address=tcp://127.0.0.1:5003 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent3 &
-#---------
-
-#DBServers:
-#----------
-docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_NO_AUTH=1 -p 127.0.0.1:6001:6001 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6001 --cluster.my-address tcp://127.0.0.1:6001 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6001 &
-
-docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_NO_AUTH=1 -p 127.0.0.1:6002:6002 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6002 --cluster.my-address tcp://127.0.0.1:6002 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6002 &
-
-docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_NO_AUTH=1 -p 127.0.0.1:6003:6003 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6003 --cluster.my-address tcp://127.0.0.1:6003 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6003 &
-#---------
-==========
-
-#arangod docker AF WITH auth:
-#==========
-#Agencies:
-#---------
-docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:5001:5001 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5001 --agency.my-address=tcp://127.0.0.1:5001 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent1 --server.jwt-secret xyu &
-
-docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:5002:5002 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5002 --agency.my-address=tcp://127.0.0.1:5002 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent2 --server.jwt-secret xyu &
-
-docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:5003:5003 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:5003 --agency.my-address=tcp://127.0.0.1:5003 --agency.activate true --agency.size 3 --agency.endpoint tcp://127.0.0.1:5001 --agency.supervision true --database.directory agent3 --server.jwt-secret xyu &
-#---------
-
-#DBServers:
-#----------
-docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:6001:6001 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6001 --cluster.my-address tcp://127.0.0.1:6001 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6001 --server.jwt-secret xyu &
-
-docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:6002:6002 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6002 --cluster.my-address tcp://127.0.0.1:6002 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6002 --server.jwt-secret xyu &
-
-docker run --rm -e ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY} -e ARANGO_ROOT_PASSWORD= -p 127.0.0.1:6003:6003 arangodb/enterprise-preview:3.6.0 arangod --server.endpoint tcp://0.0.0.0:6003 --cluster.my-address tcp://127.0.0.1:6003 --cluster.my-role SINGLE --cluster.agency-endpoint tcp://127.0.0.1:5001 --cluster.agency-endpoint tcp://127.0.0.1:5002 --cluster.agency-endpoint tcp://127.0.0.1:5003 --replication.automatic-failover true --database.directory singleserver6003 --server.jwt-secret xyu &
-#---------
 #==========
