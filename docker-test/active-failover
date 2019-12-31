@@ -33,35 +33,44 @@ else
            "-v" "$secret_dir:/secret"
     )
 fi
+
+portmap=""
+port=""
 case "${server_type}-${number}" in
     starter-1)
         portmap="10000:8528"
     ;;
-    starter-1)
+    starter-2)
         portmap="11000:9528"
     ;;
-    starter-2)
+    starter-3)
         portmap="12000:10528"
     ;;
-    manual-agent-3)
+    agent-1)
+        port=5001
+    ;;
+    agent-2)
+        port=5002
+    ;;
+    agent-3)
         port=5003
     ;;
-    manual-db-1)
+    db-1)
         port=6001
     ;;
-    manual-db-2)
+    db-2)
         port=6002
     ;;
-    manual-db-3)
+    db-3)
         port=6003
     ;;
     *)
-        echo "mode server_type number combination not supported - ${mode}-${server_type}-${number}"
+        echo "no valid combiantion"
     ;;
 esac
 
 
-if [[ -n "portmap" ]]; then
+if [[ -n "$portmap" ]]; then
     cmd+=( "-p" "$portmap" )
 else
     cmd+=( "--net" "host" )
