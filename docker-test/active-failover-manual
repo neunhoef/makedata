@@ -1,7 +1,7 @@
 #!/bin/bash
 set -u
 
-image="arangodb/enterprise-preview:3.6.0"
+. config.bash
 
 mode=$1        # arangod # TODO add starter
 auth=$2        # no-auth # TODO auth
@@ -22,7 +22,7 @@ cmd=(
 )
 
 if [[ $edition == "enterprise" ]]; then
-    cmd+=( "-e" "ARANGO_LICENSE_KEY=${ARANGO_LICENSE_KEY}" )
+    cmd+=( "-e" "ARANGO_LICENSE_KEY=${enterprise_key}" )
 else
     echo "not enterprise"
     exit 1
@@ -60,7 +60,8 @@ case "${server_type}-${number}" in
 esac
 
 
-cmd+=( "-p" "127.0.0.1:$port:$port" "$image" 'arangod' '--server.endpoint' "tcp://0.0.0.0:$port")
+cmd+=( "--net" "host" "$image" 'arangod' '--server.endpoint' "tcp://0.0.0.0:$port")
+#cmd+=( "-p" "127.0.0.1:$port:$port" "$image" 'arangod' '--server.endpoint' "tcp://0.0.0.0:$port")
 
 case "${server_type}" in
     agent)
