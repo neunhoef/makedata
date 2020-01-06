@@ -38,13 +38,13 @@ portmap=""
 port=""
 case "${server_type}-${number}" in
     starter-1)
-        portmap="10000:8528"
+        #portmap="10000:8528"
     ;;
     starter-2)
-        portmap="11000:9528"
+       # portmap="11000:9528"
     ;;
     starter-3)
-        portmap="12000:10528"
+        #portmap="12000:10528"
     ;;
     agent-1)
         port=5001
@@ -87,7 +87,7 @@ case "${server_type}" in
         )
 
         if (( number > 1 )); then
-            cmd+=( "--starter.join" "127.0.0.1:10000" )
+            cmd+=( "--starter.join" "127.0.0.1:8529" )
         fi
     ;;
     agent)
