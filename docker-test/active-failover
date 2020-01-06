@@ -87,7 +87,7 @@ case "${server_type}" in
         )
 
         if (( number > 1 )); then
-            cmd+=( "--starter.join" "127.0.0.1:8529" )
+            cmd+=( "--starter.join" "127.0.0.1:8528" )
         fi
     ;;
     agent)
