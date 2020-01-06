@@ -39,6 +39,6 @@ for edition in Enterprise Community; do
 
     for ver in $version $old_version; do
         echo "using command $user@$server:/mnt/buildfiles/stage2/${ver:0:3}/packages/$edition/$os/arangodb${suffix}"*"$ver"*"$ext" "$destination"
-        scp "$user@$server:/mnt/buildfiles/stage2/${ver:0:3}/packages/$edition/$os/arangodb${suffix}"*"$ver"*"$ext" "$destination" || ferr "command failed"
+        rsync -avh --progress --partial "$user@$server:/mnt/buildfiles/stage2/${ver:0:3}/packages/$edition/$os/arangodb${suffix}"*"$ver"*"$ext" "$destination" || ferr "command failed"
     done
 done
