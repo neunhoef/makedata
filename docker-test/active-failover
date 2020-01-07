@@ -3,9 +3,20 @@ set -u
 
 . config.bash
 
+usage(){
+    echo "active-failover (enterpise|community) (auth|no-auth) (starter|db|agent) (1|2|3)"
+    echo ""
+    echo "For manual startup you need to start 3 agent and 3 db instances."
+    echo "For automatic startup using the starter you need to start only 3 instances of starter."
+}
+
+if (( $# < 4 )); then
+    usage
+fi
+
 edition=$1     # enterprise community
 auth=$2        # no-auth
-server_type=$3 # agent dba starter
+server_type=$3 # agent db starter
 number=$4      # 1 2 3
 
 echo "configuration"
@@ -22,7 +33,8 @@ cmd=(
 if [[ $edition == "enterprise" ]]; then
     cmd+=( "-e" "ARANGO_LICENSE_KEY=${enterprise_key}" )
 else
-    echo "not enterprise"
+    echo "community not implemented"
+    usage
     exit 1
 fi
 
@@ -128,5 +140,5 @@ else
 fi
 
 echo "running: ${cmd[@]}"
-sleep 3
+sleep 5
 "${cmd[@]}"
